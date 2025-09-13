@@ -1,42 +1,51 @@
-import { useEffect } from 'react';
-import css from './Modal.module.css'
-import { createPortal } from 'react-dom';
+'use client'
 
-interface Props {
-  children: React.ReactNode;
-  onClose: () => void;
+import { createPortal } from "react-dom";
+import css from "./Modal.module.css";
+import { useEffect, useState } from "react";
+
+
+interface ModalProps {
+    onClose: () => void;
+    children: React.ReactNode;
 }
 
-const modalRoot = document.getElementById("modal-root") ?? document.body;
+export default function Modal({ onClose, children }: ModalProps ) {
+    const [mounted, setMounted] = useState(false);
 
-export default function Modal({ children, onClose }: Props) {
-  useEffect(() => {
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === "Escape") {
-          onClose();
+    useEffect(() => {
+      setMounted(true);
+      return () => setMounted(false);
+    }, []);
+    const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
+        if (event.target === event.currentTarget) { 
+            onClose();
         }
-      };
-      document.addEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "hidden";
-
-      return () => {
-        document.removeEventListener("keydown", handleKeyDown);
-        document.body.style.overflow = "";
-      };
-    }, [onClose]);
-
-  const handleBackdrop = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) onClose();
-  }
+    }
+    useEffect(() => {
+        const handleKeyClose = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                onClose();
+            }
+        };
+        document.addEventListener("keydown", handleKeyClose);
+        document.body.style.overflow = "hidden";
+        return()  => {
+            document.removeEventListener('keydown', handleKeyClose);
+            document.body.style.overflow = "";
+        }
+    }, [onClose])
+    if (!mounted) return null;
   return createPortal(
     <div
-      className={css.backdrop}
-      role="dialog"
-      aria-modal="true"
-      onClick={handleBackdrop}
-    >
-      <div className={css.modal}>{children}</div>
-    </div>,
-    modalRoot
-  );
-}
+  className={css.backdrop}
+  role="dialog"
+  aria-modal="true"
+  onClick={handleBackdropClick}
+>
+  <div className={css.modal}>
+    {children}
+  </div>
+</div>, document.body
+);
+};

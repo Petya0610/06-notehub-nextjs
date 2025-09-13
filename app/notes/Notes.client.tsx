@@ -8,7 +8,7 @@ import {useQuery, keepPreviousData} from "@tanstack/react-query";
 import {useDebouncedCallback} from "use-debounce";
 import {fetchNotes, type NoteResponse } from "@/lib/api";
 import {useState} from "react";
-import css from "./NotesPage.module.css"
+import css from "./NotesPage.module.css";
 
 const NoteListClient= () => {
   const [query, setQuery] = useState('');
