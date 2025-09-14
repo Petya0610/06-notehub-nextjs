@@ -12,7 +12,7 @@ return  <main className={css.main}>
     <p className={css.description}>
       The app provides a clean interface for writing, editing, and browsing
       notes. With support for keyword search and structured organization,
-      NoteHub offers a streamlined experience for anyone who values clarit
+      NoteHub offers a streamlined experience for anyone who values clarity
       and productivity.
     </p>
   </div>
